@@ -8,42 +8,6 @@ defmodule TranschangeTest do
     assert Transchange.new == %Transchange{}
   end
 
-  test "pipe_ok with tuple" do
-    transchange =
-      Transchange.new
-      |> Transchange.pipe_ok({__MODULE__, :ok, []})
-
-    assert {__MODULE__, :ok, []} in transchange.ok_pipeline
-  end
-
-  test "pipe_ok with fun" do
-    fun = &(&1)
-
-    transchange =
-      Transchange.new
-      |> Transchange.pipe_ok(fun)
-
-    assert fun in transchange.ok_pipeline
-  end
-
-  test "pipe_error with tuple" do
-    transchange =
-      Transchange.new
-      |> Transchange.pipe_error({__MODULE__, :error, []})
-
-    assert {__MODULE__, :error, []} in transchange.error_pipeline
-  end
-
-  test "pipe_error with fun" do
-    fun = &(&1)
-
-    transchange =
-      Transchange.new
-      |> Transchange.pipe_error(fun)
-
-    assert fun in transchange.error_pipeline
-  end
-
   test "update changeset" do
     changeset = valid_changeset
 
