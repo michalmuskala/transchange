@@ -15,7 +15,8 @@ defmodule TranschangeTest do
     |> Transchange.update(:changeset, changeset)
     |> Transchange.run(TestRepo)
 
-    assert_received {:update, %{changeset | action: :update}}
+    updated = %{changeset | action: :update}
+    assert_received {:update, ^updated}
     assert_received {:transaction, _}
   end
 
@@ -26,7 +27,8 @@ defmodule TranschangeTest do
     |> Transchange.insert(:changeset, changeset)
     |> Transchange.run(TestRepo)
 
-    assert_received {:insert, %{changeset | action: :insert}}
+    inserted = %{changeset | action: :insert}
+    assert_received {:insert, ^inserted}
     assert_received {:transaction, _}
   end
 
@@ -37,7 +39,8 @@ defmodule TranschangeTest do
     |> Transchange.delete(:changeset, changeset)
     |> Transchange.run(TestRepo)
 
-    assert_received {:delete, %{changeset | action: :delete}}
+    deleted = %{changeset | action: :delete}
+    assert_received {:delete, ^deleted}
     assert_received {:transaction, _}
   end
 
@@ -48,7 +51,8 @@ defmodule TranschangeTest do
     |> Transchange.update(:changeset, changeset)
     |> Transchange.run(TestRepo)
 
-    refute_received {:update, ^changeset}
+    updated = %{changeset | action: :update}
+    refute_received {:update, ^updated}
     refute_received {:transaction, _}
   end
 
@@ -59,7 +63,8 @@ defmodule TranschangeTest do
     |> Transchange.insert(:changeset, changeset)
     |> Transchange.run(TestRepo)
 
-    refute_received {:insert, ^changeset}
+    inserted = %{changeset | action: :insert}
+    refute_received {:insert, ^inserted}
     refute_received {:transaction, _}
   end
 
@@ -70,7 +75,8 @@ defmodule TranschangeTest do
     |> Transchange.delete(:changeset, changeset)
     |> Transchange.run(TestRepo)
 
-    refute_received {:delete, ^changeset}
+    deleted = %{changeset | action: :delete}
+    refute_received {:delete, ^deleted}
     refute_received {:transaction, _}
   end
 
