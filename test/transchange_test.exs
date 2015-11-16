@@ -44,6 +44,24 @@ defmodule TranschangeTest do
     assert_received {:transaction, _}
   end
 
+  test "insert, update & delete at once" do
+    changeset = valid_changeset
+
+    Transchange.new
+    |> Transchange.update(:one, changeset)
+    |> Transchange.delete(:two, changeset)
+    |> Transchange.insert(:three, changeset)
+    |> Transchange.run(TestRepo)
+
+    updated  = %{changeset | action: :update}
+    deleted  = %{changeset | action: :delete}
+    inserted = %{changeset | action: :insert}
+    assert_received {:update, ^updated}
+    assert_received {:delete, ^deleted}
+    assert_received {:insert, ^inserted}
+    assert_received {:transaction, _}
+  end
+
   test "update invalid changeset" do
     changeset = invalid_changeset
 
@@ -77,6 +95,25 @@ defmodule TranschangeTest do
 
     deleted = %{changeset | action: :delete}
     refute_received {:delete, ^deleted}
+    refute_received {:transaction, _}
+  end
+
+  test "insert, update & delete at once with invalid changeset" do
+    invalid   = invalid_changeset
+    changeset = valid_changeset
+
+    Transchange.new
+    |> Transchange.update(:one, changeset)
+    |> Transchange.delete(:two, invalid)
+    |> Transchange.insert(:three, changeset)
+    |> Transchange.run(TestRepo)
+
+    updated  = %{changeset | action: :update}
+    deleted  = %{invalid   | action: :delete}
+    inserted = %{changeset | action: :insert}
+    refute_received {:update, ^updated}
+    refute_received {:delete, ^deleted}
+    refute_received {:insert, ^inserted}
     refute_received {:transaction, _}
   end
 
