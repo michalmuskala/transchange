@@ -10,7 +10,7 @@ result =
   Transchange.new
   |> Transchange.update(:user, User.changeset(%User{}, user_params))
   |> Transchange.insert(:log, LogEntry.user_created_changeset(user_params))
-  |> Transchange.delete(:old_user, old_user)
+  |> Transchange.delete(:old_user, User.delete_changeset(old_user))
   |> Transchange.run(MyRepo)
 
 case result do
