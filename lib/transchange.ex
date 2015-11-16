@@ -3,22 +3,30 @@ defmodule Transchange do
 
   defstruct changesets: []
 
+  @type name :: atom
+  @type t :: %__MODULE__{changesets: [{name, Changeset.t}]}
+
+  @spec new :: t
   def new do
     %Transchange{}
   end
 
+  @spec insert(t, name, Changeset.t) :: t
   def insert(transchange, name, changeset) do
     add_changeset(transchange, :insert, name, changeset)
   end
 
+  @spec update(t, name, Changeset.t) :: t
   def update(transchange, name, changeset) do
     add_changeset(transchange, :update, name, changeset)
   end
 
+  @spec delete(t, name, Changeset.t) :: t
   def delete(transchange, name, changeset) do
     add_changeset(transchange, :delete, name, changeset)
   end
 
+  @spec run(t, Ecto.Repo.t, Keyword.t)
   def run(%Transchange{} = transchange, repo, opts \\ []) when is_atom(repo) do
     transchange.changesets
     |> Enum.reverse

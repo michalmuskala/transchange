@@ -1,6 +1,25 @@
 # Transchange
 
-**TODO: Add description**
+It's a library that allows for creating a set of Ecto changesets that will run
+in a single transaction.
+
+## Example
+
+```elixir
+result =
+  Transchange.new
+  |> Transchange.update(:user, User.changeset(%User{}, user_params))
+  |> Transchange.insert(:log, LogEntry.user_created_changeset(user_params))
+  |> Transchange.delete(:old_user, old_user)
+  |> Transchange.run(MyRepo)
+
+case result do
+  {:ok, models} ->
+    # models == [user: ..., log: ..., old_user: ...]
+  {:error, changesets} ->
+    # changesets == [user: ...]
+end
+```
 
 ## Installation
 
