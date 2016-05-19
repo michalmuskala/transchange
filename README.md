@@ -1,5 +1,9 @@
 # Transchange
 
+**DEPRECATED**: Ecto 2 will ship with `Ecto.Multi` that is very similar to this
+library. The implementation of `Ecto.Multi` is more polished and it's advised
+to use it instead of this library.
+
 It's a library that allows for creating a set of Ecto changesets that will run
 in a single transaction.
 
